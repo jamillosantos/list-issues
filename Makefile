@@ -43,4 +43,4 @@ dep-status:
 	@$(DEP) status
 
 install:
-	@$(GOCMD) build -o bin/list-issues "-ldflags=$(LDFLAGS)" -v $(PROJECT_PATH)
+	@$(GOCMD) install "-ldflags=$(LDFLAGS)" -v $(PROJECT_PATH)

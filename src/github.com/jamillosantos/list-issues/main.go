@@ -1,4 +1,4 @@
-package list_issues
+package main
 
 import (
 	"bufio"
@@ -18,7 +18,7 @@ import (
 	"github.com/google/go-github/github"
 	cli "github.com/jawher/mow.cli"
 	"golang.org/x/oauth2"
-	"gopkg.in/cheggaaa/pb.v1"
+	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
 var (
@@ -67,7 +67,7 @@ func Repository(owner, name string) *github.Repository {
 }
 
 var (
-	regExpRepInfoFromURL = regexp.MustCompile("^(git@github.com:([a-z0-9]+)/([a-z0-9]+).git|https://github.com/([a-z0-9]+)/([a-z0-9]+))$")
+	regExpRepInfoFromURL = regexp.MustCompile("^(git@github.com:([^\\/]+)/([^\\.]+).git|https://github.com/([a-z0-9]+)/([a-z0-9]+))$")
 )
 
 func getRepositoryInfoFromURL(currentDir string) (string, string) {
@@ -152,8 +152,8 @@ func Verbosef(format string, args ...interface{}) {
 }
 
 func main() {
-	fmt.Fprintln(os.Stderr, "Version: %s", Version)
-	fmt.Fprintln(os.Stderr, "Build: %s", Build)
+	fmt.Fprintln(os.Stderr, "Version:", Version)
+	fmt.Fprintln(os.Stderr, "Build:", Build)
 	currentDir, err := os.Getwd()
 	if err != nil {
 		panic(err)
