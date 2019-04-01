@@ -18,7 +18,7 @@ import (
 	"github.com/google/go-github/github"
 	cli "github.com/jawher/mow.cli"
 	"golang.org/x/oauth2"
-	pb "gopkg.in/cheggaaa/pb.v1"
+	"gopkg.in/cheggaaa/pb.v1"
 )
 
 var (
@@ -133,6 +133,7 @@ var (
 	optOnlyClosed            = argsApp.BoolOpt("only-closed c", true, "Include only closed issues.")
 	optIncludeExternalIssues = argsApp.BoolOpt("external-issues e", true, "Include issues from outside of this repository")
 	optDisplaySummary        = argsApp.BoolOpt("summary s", true, "Display summary")
+	optContinueOnError       = argsApp.BoolOpt("continue-on-error ce", true, "Continue on error. (errors will be reported in the stderr)")
 )
 
 func init() {
@@ -257,7 +258,21 @@ func main() {
 			}
 			issueDetailed, resp, err := client.Issues.Get(ctx, *issue.Repository.Owner.Name, *issue.Repository.Name, int(*issue.Number))
 			if err != nil {
-				panic(err)
+				if githubErr, ok := err.(*github.ErrorResponse); ok {
+					if *optContinueOnError && githubErr.Response.StatusCode == 404 {
+						fmt.Fprintf(os.Stderr, "\nThe issue %d could not be found.", *issue.Number)
+						if *optContinueOnError {
+							continue
+						}
+						panic(err)
+					}
+				} else {
+					fmt.Fprintf(os.Stderr, "\nThe issue %d could not be found.", *issue.Number)
+					if *optContinueOnError {
+						continue
+					}
+					panic(err)
+				}
 			}
 			opt.Page = resp.NextPage
 
