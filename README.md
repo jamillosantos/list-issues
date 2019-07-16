@@ -3,22 +3,32 @@
 This is a helper tool for listing all issues mentioned in commits between two
 references (branches, versions).
 
-## Building
+## Installing
 
-This command will download all dependencies needed and compile a binary to the
-`bin` directory. Add this folder to your `$PATH`. 
+If you want the `list-issues` to go to the default go bin directory just:
 
 ```
-make dep-ensure install
+go install
 ```
 
-:warning: Tested on Go 1.11.4 under Deepin 15.9.2. Other Go versions + OS might
+Thanks to the go modules, it will download all dependencies.
+
+In the other hand, if you want just to build the executable and use it for other purpose,
+just do:  
+
+```
+go build
+```
+
+It will generate a `list-issues` in this directory.
+
+:warning: Tested on Go 1.12 under Ubuntu 18.04.2 LTS. Other Go versions + OS might
 compile with no problems. 
 
 ## Usage
 
 ```
-list-commits [COMPARE] [-v][-t][-l][-c][-e][-s][-h]
+list-issues [COMPARE] [-v][-t][-l][-c][-e][-s][-h]
 ```
 
 * `COMPARE`                 : Ref..ref passed to the git log to generate the list of commits. Ex: `master..issue-323`.
